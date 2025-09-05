@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>API do Simulador de Guilda — Documentação para o Desenvolvedor</title>
+    <style>
+      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; line-height: 1.5; margin: 2rem auto; max-width: 980px; padding: 0 1rem; }
+      h1, h2, h3 { line-height: 1.2; }
+      code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+      pre { background: #0f172a; color: #e2e8f0; padding: 1rem; border-radius: 8px; overflow: auto; }
+      .route { border-left: 4px solid #3b82f6; padding-left: 12px; margin: 24px 0; }
+      .method { display: inline-block; font-size: .8rem; font-weight: 700; border-radius: 4px; padding: 2px 6px; margin-right: 8px; color: #0f172a; }
+      .GET { background: #bbf7d0; }
+      .POST { background: #fde68a; }
+      .PUT { background: #bfdbfe; }
+      .DELETE { background: #fecaca; }
+      small,h4 { color:#334155 }
+      a { color: #2563eb; text-decoration: none; }
+      a:hover { text-decoration: underline; }
+      .tip { background:#f1f5f9; border-radius:6px; padding:.75rem; }
+    </style>
+  </head>
+  <body>
+    <h1>API REST — Simulador de Guilda - Guia do Desenvolvedor</h1>
+    <p>Esta página descreve as rotas disponíveis e mostra exemplos práticos de como consumir cada uma usando <code>fetch</code> no navegador. Assuma que a aplicação está rodando em <code>https://simulador-guilda.vercel.app</code>.</p>
+
+    <div class="tip">
+      <strong>Dicas rápidas:</strong>
+      <ul>
+        <li>Sempre use o cabeçalho <code>{ 'Content-Type': 'application/json' }</code> para <em>POST</em>/<em>PUT</em>.</li>
+        <li>Use <code>JSON.stringify(dados)</code> no <code>body</code> ao enviar JSON.</li>
+        <li>Verifique <code>res.ok</code> e trate possíveis erros (400/404/409/500).</li>
+      </ul>
+    </div>
+
+    <h2>Aventureiros</h2>
+
+    <div class="route">
+      <h3><span class="method GET">GET</span> /aventureiro — listar todos</h3>
+      <pre><code>async function listarAventureiros() {
+  try {
+    const res = await fetch('/aventureiro');
+    const dados = await res.json();
+    console.log(dados);
+  } catch (err) {
+    console.error(err);
+  }
+}
+await listarAventureiros();</code></pre>
+    </div>
+
+    <div class="route">
+      <h3><span class="method GET">GET</span> /aventureiro/:id — obter por ID</h3>
+      <pre><code>async function obterAventureiro(id) {
+  try {
+    const res = await fetch(`/aventureiro/${id}`);
+    if (!res.ok) throw new Error('Não encontrado');
+    const dados = await res.json();
+    console.log(dados);
+  } catch (err) {
+    console.error(err);
+  }
+}
+await obterAventureiro(1);</code></pre>
+    </div>
+
+    <div class="route">
+      <h3><span class="method POST">POST</span> /aventureiro — criar</h3>
+      <pre><code>async function criarAventureiro(novo) {
+  try {
+    const res = await fetch('/aventureiro', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(novo)
+    });
+    if (!res.ok) throw new Error('Erro ao criar');
+    const dados = await res.json();
+    console.log(dados);
+  } catch (err) {
+    console.error(err);
+  }
+}
+await criarAventureiro({ id: 3, nome: 'Lina', classe: 'Maga' });</code></pre>
+    </div>
+
+    <div class="route">
+      <h3><span class="method PUT">PUT</span> /aventureiro/:id — atualizar</h3>
+      <pre><code>async function atualizarAventureiro(id, dados) {
+  try {
+    const res = await fetch(`/aventureiro/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(dados)
+    });
+    if (!res.ok) throw new Error('Erro ao atualizar');
+    const body = await res.json();
+    console.log(body);
+  } catch (err) {
+    console.error(err);
+  }
+}
+await atualizarAventureiro(1, { nome: 'Aribaldo', classe: 'Bárbaro', nivel: 2 });</code></pre>
+    </div>
+
+    <div class="route">
+      <h3><span class="method DELETE">DELETE</span> /aventureiro/:id — excluir</h3>
+      <pre><code>async function excluirAventureiro(id) {
+  try {
+    const res = await fetch(`/aventureiro/${id}`, { method: 'DELETE' });
+    if (!res.ok) throw new Error('Não encontrado');
+    const dados = await res.json();
+    console.log(dados);
+  } catch (err) {
+    console.error(err);
+  }
+}
+await excluirAventureiro(2);</code></pre>
+    </div>
+
+    <h2>Guildas</h2>
+
+    <div class="route">
+      <h3><span class="method GET">GET</span> /guilda — listar todas</h3>
+      <pre><code>async function listarGuildas() {
+  try {
+    const res = await fetch('/guilda');
+    const dados = await res.json();
+    console.log(dados);
+  } catch (err) {
+    console.error(err);
+  }
+}
+await listarGuildas();</code></pre>
+    </div>
+
+    <div class="route">
+      <h3><span class="method GET">GET</span> /guilda/:id — obter por ID</h3>
+      <pre><code>async function obterGuilda(idGuilda) {
+  try {
+    const res = await fetch(`/guilda/${idGuilda}`);
+    if (!res.ok) throw new Error('Guilda não encontrada');
+    const dados = await res.json();
+    console.log(dados);
+  } catch (err) {
+    console.error(err);
+  }
+}
+await obterGuilda(0);</code></pre>
+    </div>
+
+    <div class="route">
+      <h3><span class="method POST">POST</span> /guilda — criar</h3>
+      <pre><code>async function criarGuilda(nova) {
+  try {
+    const res = await fetch('/guilda', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(nova)
+    });
+    if (!res.ok) throw new Error('Erro ao criar guilda');
+    const dados = await res.json();
+    console.log(dados);
+  } catch (err) {
+    console.error(err);
+  }
+}
+await criarGuilda({ id: 5, nome: 'Guilda dos Arcanos', especialidade: 'Magia' });</code></pre>
+    </div>
+
+    <div class="route">
+      <h3><span class="method PUT">PUT</span> /guilda/:id — atualizar</h3>
+      <pre><code>async function atualizarGuilda(idGuilda, dados) {
+  try {
+    const res = await fetch(`/guilda/${idGuilda}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(dados)
+    });
+    if (!res.ok) throw new Error('Erro ao atualizar guilda');
+    const body = await res.json();
+    console.log(body);
+  } catch (err) {
+    console.error(err);
+  }
+}
+await atualizarGuilda(1, { nome: 'Guilda dos Gremistas', especialidade: 'Futebol' });</code></pre>
+    </div>
+
+    <div class="route">
+      <h3><span class="method DELETE">DELETE</span> /guilda/:id — excluir</h3>
+      <pre><code>async function excluirGuilda(idGuilda) {
+  try {
+    const res = await fetch(`/guilda/${idGuilda}`, { method: 'DELETE' });
+    if (!res.ok) throw new Error('Não encontrada');
+    const dados = await res.json();
+    console.log(dados);
+  } catch (err) {
+    console.error(err);
+  }
+}
+await excluirGuilda(5);</code></pre>
+    </div>
+
+    <h2>Membros da Guilda</h2>
+
+    <div class="route">
+      <h3><span class="method GET">GET</span> /guilda/:id/membros — listar membros</h3>
+      <pre><code>async function listarMembros(idGuilda) {
+  try {
+    const res = await fetch(`/guilda/${idGuilda}/membros`);
+    const dados = await res.json();
+    console.log(dados);
+  } catch (err) {
+    console.error(err);
+  }
+}
+await listarMembros(0);</code></pre>
+    </div>
+
+    <div class="route">
+      <h3><span class="method POST">POST</span> /guilda/:id/membros — recrutar aventureiro</h3>
+      <small>O corpo deve conter <code>aventureiroId</code> de um aventureiro existente.</small>
+      <pre><code>async function recrutarMembro(idGuilda, aventureiroId) {
+  try {
+    const res = await fetch(`/guilda/${idGuilda}/membros`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ aventureiroId })
+    });
+    if (!res.ok) throw new Error('Falha ao recrutar');
+    const dados = await res.json();
+    console.log(dados);
+  } catch (err) {
+    console.error(err);
+  }
+}
+await recrutarMembro(0, 1);</code></pre>
+    </div>
+
+    <div class="route">
+      <h3><span class="method DELETE">DELETE</span> /guilda/:id/membros/:aventureiroId — remover membro</h3>
+      <pre><code>async function removerMembro(idGuilda, idAventureiro) {
+  try {
+    const res = await fetch(`/guilda/${idGuilda}/membros/${idAventureiro}`, { method: 'DELETE' });
+    if (!res.ok) throw new Error('Membro não encontrado');
+    const dados = await res.json();
+    console.log(dados);
+  } catch (err) {
+    console.error(err);
+  }
+}
+await removerMembro(0, 1);</code></pre>
+    </div>
+
+    <h2>Utilidades</h2>
+    <div class="route">
+      <h3><span class="method GET">GET</span> /digaOla — teste rápido</h3>
+      <pre><code>async function digaOla() {
+  const res = await fetch('/digaOla');
+  const dados = await res.json();
+  console.log(dados);
+}
+await digaOla();</code></pre>
+    </div>
+
+    <p><small>Veja também o arquivo <code>test/requests.http</code> para exemplos via REST Client.</small></p>
+  </body>
+</html>
